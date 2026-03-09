@@ -312,6 +312,7 @@
 
         <div class="buttons">
           <button type="submit" id="submitBtn" class="button-primary">Gerar resultado</button>
+          <button type="button" id="resetBtn" class="button-secondary">Novo acesso</button>
           <a href="index.html" class="button-link button-secondary">Voltar à página inicial</a>
         </div>
       </form>
@@ -399,6 +400,7 @@
 
     const form = document.getElementById("pilotForm");
     const submitBtn = document.getElementById("submitBtn");
+    const resetBtn = document.getElementById("resetBtn");
     const statusEl = document.getElementById("status");
     const resultCard = document.getElementById("resultCard");
 
@@ -434,11 +436,48 @@
       document.getElementById(elementId).textContent = value || "Não informado.";
     }
 
+    function clearList(elementId) {
+      const el = document.getElementById(elementId);
+      el.innerHTML = "";
+    }
+
+    function clearResults() {
+      document.getElementById("metaStatus").textContent = "-";
+      document.getElementById("metaId").textContent = "-";
+      document.getElementById("metaMensagem").textContent = "-";
+
+      document.getElementById("outTema").textContent = "";
+      document.getElementById("outPergunta").textContent = "";
+      document.getElementById("outObjetivo").textContent = "";
+      document.getElementById("outStringGeral").textContent = "";
+      document.getElementById("outPubmed").textContent = "";
+      document.getElementById("outBvs").textContent = "";
+      document.getElementById("outJustificativa").textContent = "";
+      document.getElementById("outLacuna").textContent = "";
+
+      clearList("outInclusao");
+      clearList("outExclusao");
+      clearList("outDescritores");
+      clearList("outBases");
+
+      resultCard.style.display = "none";
+    }
+
+    function novoAcesso() {
+      form.reset();
+      clearStatus();
+      clearResults();
+      document.getElementById("tema").focus();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    resetBtn.addEventListener("click", novoAcesso);
+
     form.addEventListener("submit", async function (event) {
       event.preventDefault();
 
       clearStatus();
-      resultCard.style.display = "none";
+      clearResults();
 
       const payload = {
         tema: document.getElementById("tema").value.trim(),
@@ -455,6 +494,7 @@
       }
 
       submitBtn.disabled = true;
+      resetBtn.disabled = true;
       submitBtn.textContent = "Gerando resultado...";
       showStatus("Solicitação enviada. Aguarde o processamento.", "info");
 
@@ -497,6 +537,7 @@
         showStatus("Erro ao gerar o resultado: " + error.message, "error");
       } finally {
         submitBtn.disabled = false;
+        resetBtn.disabled = false;
         submitBtn.textContent = "Gerar resultado";
       }
     });
