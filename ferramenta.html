@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ferramenta piloto - Apoio metodológico para revisões</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f7fb;
+      color: #1f2937;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 24px 16px 48px;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 32px 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      margin-bottom: 24px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #e0ecff;
+      color: #1d4ed8;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 16px;
+    }
+
+    h1, h2, h3 {
+      color: #111827;
+      margin-top: 0;
+    }
+
+    h1 {
+      font-size: 30px;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+
+    h2 {
+      font-size: 22px;
+      margin-top: 28px;
+      margin-bottom: 12px;
+    }
+
+    h3 {
+      font-size: 18px;
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+
+    p {
+      margin-top: 0;
+      margin-bottom: 16px;
+      font-size: 16px;
+    }
+
+    .notice {
+      background: #fff7ed;
+      border: 1px solid #fdba74;
+      color: #9a3412;
+      padding: 16px;
+      border-radius: 12px;
+      margin: 20px 0 8px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      margin-bottom: 18px;
+    }
+
+    .field-full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #111827;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 16px;
+      font-family: Arial, sans-serif;
+      background: #fff;
+      color: #111827;
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .hint {
+      font-size: 13px;
+      color: #6b7280;
+      margin-top: 6px;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    button,
+    .button-link {
+      display: inline-block;
+      border: none;
+      border-radius: 10px;
+      padding: 14px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      text-decoration: none;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .button-primary {
+      background: #2563eb;
+      color: #fff;
+    }
+
+    .button-primary:hover {
+      background: #1d4ed8;
+    }
+
+    .button-secondary {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .button-secondary:hover {
+      background: #d1d5db;
+    }
+
+    .status {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 10px;
+      display: none;
+      font-size: 15px;
+    }
+
+    .status.info {
+      display: block;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1d4ed8;
+    }
+
+    .status.error {
+      display: block;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #b91c1c;
+    }
+
+    .status.success {
+      display: block;
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      color: #047857;
+    }
+
+    .result-card {
+      display: none;
+    }
+
+    .result-meta {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-meta p {
+      margin-bottom: 8px;
+    }
+
+    .result-block {
+      margin-bottom: 20px;
+      padding: 18px;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      background: #fafafa;
+    }
+
+    .result-block pre {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    ul.result-list {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    ul.result-list li {
+      margin-bottom: 8px;
+    }
+
+    .footer {
+      margin-top: 12px;
+      font-size: 14px;
+      color: #6b7280;
+    }
+
+    @media (max-width: 720px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        padding: 24px 18px;
+      }
+
+      h1 {
+        font-size: 26px;
+      }
+
+      button,
+      .button-link {
+        width: 100%;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="badge">Versão piloto</div>
+      <h1>Ferramenta de apoio metodológico para revisões de literatura</h1>
+      <p>
+        Preencha os campos abaixo para gerar uma sugestão inicial de pergunta refinada,
+        objetivo, critérios, descritores e estratégias de busca.
+      </p>
+
+      <div class="notice">
+        <strong>Atenção:</strong> os resultados são sugestões iniciais e devem ser analisados
+        criticamente antes de qualquer uso em protocolo, projeto, dissertação, tese ou manuscrito.
+      </div>
+
+      <form id="pilotForm">
+        <div class="grid">
+          <div class="field field-full">
+            <label for="tema">Tema</label>
+            <textarea id="tema" name="tema" required placeholder="Ex.: Uso de inteligência artificial no apoio à elaboração de estratégias de busca para revisões de literatura em saúde"></textarea>
+          </div>
+
+          <div class="field">
+            <label for="tipo_de_revisao">Tipo de revisão</label>
+            <input id="tipo_de_revisao" name="tipo_de_revisao" type="text" required placeholder="Ex.: revisão de escopo" />
+          </div>
+
+          <div class="field">
+            <label for="populacao">População</label>
+            <input id="populacao" name="populacao" type="text" required placeholder="Ex.: pesquisadores e profissionais da saúde" />
+          </div>
+
+          <div class="field field-full">
+            <label for="contexto">Contexto</label>
+            <textarea id="contexto" name="contexto" required placeholder="Ex.: planejamento metodológico e construção de estratégias de busca em bases bibliográficas"></textarea>
+          </div>
+
+          <div class="field field-full">
+            <label for="objetivo_preliminar">Objetivo preliminar</label>
+            <textarea id="objetivo_preliminar" name="objetivo_preliminar" required placeholder="Ex.: mapear como ferramentas de inteligência artificial têm sido usadas para apoiar..."></textarea>
+          </div>
+
+          <div class="field field-full">
+            <label for="observacoes">Observações</label>
+            <textarea id="observacoes" name="observacoes" placeholder="Ex.: priorizar aplicações em contexto acadêmico e metodológico"></textarea>
+            <div class="hint">Campo opcional.</div>
+          </div>
+        </div>
+
+        <div class="buttons">
+          <button type="submit" id="submitBtn" class="button-primary">Gerar resultado</button>
+          <a href="index.html" class="button-link button-secondary">Voltar à página inicial</a>
+        </div>
+      </form>
+
+      <div id="status" class="status"></div>
+    </div>
+
+    <div id="resultCard" class="card result-card">
+      <h2>Resultado gerado</h2>
+
+      <div class="result-meta">
+        <p><strong>Status:</strong> <span id="metaStatus">-</span></p>
+        <p><strong>ID do registro:</strong> <span id="metaId">-</span></p>
+        <p><strong>Mensagem:</strong> <span id="metaMensagem">-</span></p>
+      </div>
+
+      <div class="result-block">
+        <h3>Tema</h3>
+        <pre id="outTema"></pre>
+      </div>
+
+      <div class="result-block">
+        <h3>Pergunta refinada</h3>
+        <pre id="outPergunta"></pre>
+      </div>
+
+      <div class="result-block">
+        <h3>Objetivo geral</h3>
+        <pre id="outObjetivo"></pre>
+      </div>
+
+      <div class="result-block">
+        <h3>Critérios de inclusão</h3>
+        <ul id="outInclusao" class="result-list"></ul>
+      </div>
+
+      <div class="result-block">
+        <h3>Critérios de exclusão</h3>
+        <ul id="outExclusao" class="result-list"></ul>
+      </div>
+
+      <div class="result-block">
+        <h3>Descritores</h3>
+        <ul id="outDescritores" class="result-list"></ul>
+      </div>
+
+      <div class="result-block">
+        <h3>String de busca geral</h3>
+        <pre id="outStringGeral"></pre>
+      </div>
+
+      <div class="result-block">
+        <h3>Bases recomendadas</h3>
+        <ul id="outBases" class="result-list"></ul>
+      </div>
+
+      <div class="result-block">
+        <h3>Estratégia PubMed</h3>
+        <pre id="outPubmed"></pre>
+      </div>
+
+      <div class="result-block">
+        <h3>Estratégia BVS</h3>
+        <pre id="outBvs"></pre>
+      </div>
+
+      <div class="result-block">
+        <h3>Justificativa resumida</h3>
+        <pre id="outJustificativa"></pre>
+      </div>
+
+      <div class="result-block">
+        <h3>Lacuna de pesquisa presumida</h3>
+        <pre id="outLacuna"></pre>
+      </div>
+
+      <div class="footer">
+        Se desejar, copie o conteúdo acima e prossiga para o formulário de avaliação.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const webhookUrl = "https://zarpelon.app.n8n.cloud/webhook/f593b668-4b72-4021-ae25-b9ec351cc599";
+
+    const form = document.getElementById("pilotForm");
+    const submitBtn = document.getElementById("submitBtn");
+    const statusEl = document.getElementById("status");
+    const resultCard = document.getElementById("resultCard");
+
+    function showStatus(message, type) {
+      statusEl.textContent = message;
+      statusEl.className = "status " + type;
+    }
+
+    function clearStatus() {
+      statusEl.textContent = "";
+      statusEl.className = "status";
+    }
+
+    function renderList(elementId, items) {
+      const el = document.getElementById(elementId);
+      el.innerHTML = "";
+
+      if (!items || !items.length) {
+        const li = document.createElement("li");
+        li.textContent = "Não informado.";
+        el.appendChild(li);
+        return;
+      }
+
+      items.forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = item;
+        el.appendChild(li);
+      });
+    }
+
+    function setText(elementId, value) {
+      document.getElementById(elementId).textContent = value || "Não informado.";
+    }
+
+    form.addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      clearStatus();
+      resultCard.style.display = "none";
+
+      const payload = {
+        tema: document.getElementById("tema").value.trim(),
+        tipo_de_revisao: document.getElementById("tipo_de_revisao").value.trim(),
+        populacao: document.getElementById("populacao").value.trim(),
+        contexto: document.getElementById("contexto").value.trim(),
+        objetivo_preliminar: document.getElementById("objetivo_preliminar").value.trim(),
+        observacoes: document.getElementById("observacoes").value.trim()
+      };
+
+      if (!payload.tema || !payload.tipo_de_revisao || !payload.populacao || !payload.contexto || !payload.objetivo_preliminar) {
+        showStatus("Por favor, preencha todos os campos obrigatórios.", "error");
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Gerando resultado...";
+      showStatus("Solicitação enviada. Aguarde o processamento.", "info");
+
+      try {
+        const response = await fetch(webhookUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || data.sucesso === false) {
+          throw new Error(data.mensagem || "Não foi possível processar a solicitação.");
+        }
+
+        document.getElementById("metaStatus").textContent = data.status || "200";
+        document.getElementById("metaId").textContent = data.id_registro || "Não informado";
+        document.getElementById("metaMensagem").textContent = data.mensagem || "Resposta recebida";
+
+        setText("outTema", data.tema);
+        setText("outPergunta", data.dados?.pergunta_refinada);
+        setText("outObjetivo", data.dados?.objetivo_geral);
+        renderList("outInclusao", data.dados?.criterios_inclusao || []);
+        renderList("outExclusao", data.dados?.criterios_exclusao || []);
+        renderList("outDescritores", data.dados?.descritores || []);
+        setText("outStringGeral", data.dados?.string_busca_geral);
+        renderList("outBases", data.dados?.bases_recomendadas || []);
+        setText("outPubmed", data.dados?.estrategia_pubmed);
+        setText("outBvs", data.dados?.estrategia_bvs);
+        setText("outJustificativa", data.dados?.justificativa_resumida);
+        setText("outLacuna", data.dados?.lacuna_pesquisa_presumida);
+
+        resultCard.style.display = "block";
+        showStatus("Resultado gerado com sucesso.", "success");
+        resultCard.scrollIntoView({ behavior: "smooth" });
+      } catch (error) {
+        showStatus("Erro ao gerar o resultado: " + error.message, "error");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Gerar resultado";
+      }
+    });
+  </script>
+</body>
+</html>
