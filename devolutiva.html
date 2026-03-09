@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Devolutiva - Ferramenta piloto</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f7fb;
+      color: #1f2937;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 24px 16px 48px;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 32px 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+
+    .badge {
+      display: inline-block;
+      background: #e0ecff;
+      color: #1d4ed8;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      margin-top: 0;
+      margin-bottom: 12px;
+      font-size: 30px;
+      color: #111827;
+    }
+
+    p {
+      margin-top: 0;
+      margin-bottom: 16px;
+      font-size: 16px;
+    }
+
+    .notice {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1d4ed8;
+      padding: 16px;
+      border-radius: 12px;
+      margin: 20px 0 24px;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .button-link {
+      display: inline-block;
+      border: none;
+      border-radius: 10px;
+      padding: 14px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      text-decoration: none;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .button-primary {
+      background: #2563eb;
+      color: #fff;
+    }
+
+    .button-primary:hover {
+      background: #1d4ed8;
+    }
+
+    .button-secondary {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .button-secondary:hover {
+      background: #d1d5db;
+    }
+
+    .iframe-wrap {
+      width: 100%;
+      overflow: hidden;
+      border-radius: 12px;
+      background: #fff;
+    }
+
+    .iframe-wrap iframe {
+      width: 100%;
+      min-height: 2544px;
+      border: 0;
+      display: block;
+    }
+
+    .footer {
+      margin-top: 16px;
+      font-size: 14px;
+      color: #6b7280;
+    }
+
+    @media (max-width: 720px) {
+      .card {
+        padding: 24px 18px;
+      }
+
+      h1 {
+        font-size: 26px;
+      }
+
+      .button-link {
+        width: 100%;
+        text-align: center;
+      }
+
+      .iframe-wrap iframe {
+        min-height: 2700px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="badge">Avaliação do piloto</div>
+      <h1>Registrar devolutiva</h1>
+      <p>
+        Obrigado por utilizar a ferramenta piloto. Sua devolutiva é importante para
+        aperfeiçoar o conteúdo, a usabilidade e a utilidade metodológica da proposta.
+      </p>
+
+      <div class="notice">
+        <strong>Orientação:</strong> preencha o formulário abaixo após utilizar a ferramenta.
+        As respostas serão usadas exclusivamente para fins de avaliação e aprimoramento do piloto.
+      </div>
+
+      <div class="iframe-wrap">
+        <iframe
+          src="https://docs.google.com/forms/d/e/1FAIpQLSe-EydvUvxz_z1JEU1RFzIHQmXjtsJG9gDXu-JQVu90279SvQ/viewform?embedded=true"
+          width="640"
+          height="2544"
+          frameborder="0"
+          marginheight="0"
+          marginwidth="0">
+          Carregando…
+        </iframe>
+      </div>
+
+      <div class="buttons">
+        <a href="index.html" class="button-link button-secondary">Voltar à página inicial</a>
+        <a href="ferramenta.html" class="button-link button-primary">Voltar à ferramenta</a>
+      </div>
+
+      <div class="footer">
+        Caso o formulário não carregue corretamente, atualize a página e tente novamente.
+      </div>
+    </div>
+  </div>
+</body>
+</html>
