@@ -526,8 +526,8 @@
       };
     }
 
-    function saveOutputData() {
-      localStorage.setItem(STORAGE_OUTPUT, JSON.stringify(collectRenderedOutput()));
+    function saveInputData() {
+  sessionStorage.setItem(STORAGE_INPUT, JSON.stringify(getInputData()));
     }
 
     function renderSavedOutput(data) {
