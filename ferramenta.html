@@ -398,11 +398,23 @@
   <script>
     const webhookUrl = "https://zarpelon.app.n8n.cloud/webhook/f593b668-4b72-4021-ae25-b9ec351cc599";
 
+    const STORAGE_INPUT = "piloto_revisao_input";
+    const STORAGE_OUTPUT = "piloto_revisao_output";
+
     const form = document.getElementById("pilotForm");
     const submitBtn = document.getElementById("submitBtn");
     const resetBtn = document.getElementById("resetBtn");
     const statusEl = document.getElementById("status");
     const resultCard = document.getElementById("resultCard");
+
+    const fieldIds = [
+      "tema",
+      "tipo_de_revisao",
+      "populacao",
+      "contexto",
+      "objetivo_preliminar",
+      "observacoes"
+    ];
 
     function showStatus(message, type) {
       statusEl.textContent = message;
@@ -463,23 +475,8 @@
       resultCard.style.display = "none";
     }
 
-    function novoAcesso() {
-      form.reset();
-      clearStatus();
-      clearResults();
-      document.getElementById("tema").focus();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-
-    resetBtn.addEventListener("click", novoAcesso);
-
-    form.addEventListener("submit", async function (event) {
-      event.preventDefault();
-
-      clearStatus();
-      clearResults();
-
-      const payload = {
+    function getInputData() {
+      return {
         tema: document.getElementById("tema").value.trim(),
         tipo_de_revisao: document.getElementById("tipo_de_revisao").value.trim(),
         populacao: document.getElementById("populacao").value.trim(),
@@ -487,6 +484,116 @@
         objetivo_preliminar: document.getElementById("objetivo_preliminar").value.trim(),
         observacoes: document.getElementById("observacoes").value.trim()
       };
+    }
+
+    function saveInputData() {
+      localStorage.setItem(STORAGE_INPUT, JSON.stringify(getInputData()));
+    }
+
+    function restoreInputData() {
+      const saved = localStorage.getItem(STORAGE_INPUT);
+      if (!saved) return;
+
+      try {
+        const data = JSON.parse(saved);
+        fieldIds.forEach(id => {
+          if (data[id] !== undefined && data[id] !== null) {
+            document.getElementById(id).value = data[id];
+          }
+        });
+      } catch (e) {
+        console.error("Erro ao restaurar entradas salvas:", e);
+      }
+    }
+
+    function collectRenderedOutput() {
+      return {
+        metaStatus: document.getElementById("metaStatus").textContent,
+        metaId: document.getElementById("metaId").textContent,
+        metaMensagem: document.getElementById("metaMensagem").textContent,
+        outTema: document.getElementById("outTema").textContent,
+        outPergunta: document.getElementById("outPergunta").textContent,
+        outObjetivo: document.getElementById("outObjetivo").textContent,
+        outStringGeral: document.getElementById("outStringGeral").textContent,
+        outPubmed: document.getElementById("outPubmed").textContent,
+        outBvs: document.getElementById("outBvs").textContent,
+        outJustificativa: document.getElementById("outJustificativa").textContent,
+        outLacuna: document.getElementById("outLacuna").textContent,
+        outInclusao: Array.from(document.querySelectorAll("#outInclusao li")).map(li => li.textContent),
+        outExclusao: Array.from(document.querySelectorAll("#outExclusao li")).map(li => li.textContent),
+        outDescritores: Array.from(document.querySelectorAll("#outDescritores li")).map(li => li.textContent),
+        outBases: Array.from(document.querySelectorAll("#outBases li")).map(li => li.textContent)
+      };
+    }
+
+    function saveOutputData() {
+      localStorage.setItem(STORAGE_OUTPUT, JSON.stringify(collectRenderedOutput()));
+    }
+
+    function renderSavedOutput(data) {
+      document.getElementById("metaStatus").textContent = data.metaStatus || "-";
+      document.getElementById("metaId").textContent = data.metaId || "-";
+      document.getElementById("metaMensagem").textContent = data.metaMensagem || "-";
+
+      setText("outTema", data.outTema);
+      setText("outPergunta", data.outPergunta);
+      setText("outObjetivo", data.outObjetivo);
+      setText("outStringGeral", data.outStringGeral);
+      setText("outPubmed", data.outPubmed);
+      setText("outBvs", data.outBvs);
+      setText("outJustificativa", data.outJustificativa);
+      setText("outLacuna", data.outLacuna);
+
+      renderList("outInclusao", data.outInclusao || []);
+      renderList("outExclusao", data.outExclusao || []);
+      renderList("outDescritores", data.outDescritores || []);
+      renderList("outBases", data.outBases || []);
+
+      resultCard.style.display = "block";
+    }
+
+    function restoreOutputData() {
+      const saved = localStorage.getItem(STORAGE_OUTPUT);
+      if (!saved) return;
+
+      try {
+        const data = JSON.parse(saved);
+        renderSavedOutput(data);
+      } catch (e) {
+        console.error("Erro ao restaurar saída salva:", e);
+      }
+    }
+
+    function clearSavedData() {
+      localStorage.removeItem(STORAGE_INPUT);
+      localStorage.removeItem(STORAGE_OUTPUT);
+    }
+
+    function novoAcesso() {
+      form.reset();
+      clearStatus();
+      clearResults();
+      clearSavedData();
+      document.getElementById("tema").focus();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    resetBtn.addEventListener("click", novoAcesso);
+
+    fieldIds.forEach(id => {
+      const el = document.getElementById(id);
+      el.addEventListener("input", saveInputData);
+      el.addEventListener("change", saveInputData);
+    });
+
+    form.addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      clearStatus();
+      clearResults();
+
+      const payload = getInputData();
+      saveInputData();
 
       if (!payload.tema || !payload.tipo_de_revisao || !payload.populacao || !payload.contexto || !payload.objetivo_preliminar) {
         showStatus("Por favor, preencha todos os campos obrigatórios.", "error");
@@ -531,6 +638,7 @@
         setText("outLacuna", data.dados?.lacuna_pesquisa_presumida);
 
         resultCard.style.display = "block";
+        saveOutputData();
         showStatus("Resultado gerado com sucesso.", "success");
         resultCard.scrollIntoView({ behavior: "smooth" });
       } catch (error) {
@@ -541,6 +649,9 @@
         submitBtn.textContent = "Gerar resultado";
       }
     });
+
+    restoreInputData();
+    restoreOutputData();
   </script>
 </body>
 </html>
