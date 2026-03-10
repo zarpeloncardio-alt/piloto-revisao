@@ -487,11 +487,11 @@
     }
 
     function saveInputData() {
-      sessionStorage.setItem(STORAGE_INPUT, JSON.stringify(getInputData()));
+      localStorage.setItem(STORAGE_INPUT, JSON.stringify(getInputData()));
     }
 
     function restoreInputData() {
-      const saved = sessionStorage.getItem(STORAGE_INPUT);
+      const saved = localStorage.getItem(STORAGE_INPUT);
       if (!saved) return;
 
       try {
@@ -527,7 +527,7 @@
     }
 
     function saveInputData() {
-  sessionStorage.setItem(STORAGE_INPUT, JSON.stringify(getInputData()));
+  localStorage.setItem(STORAGE_INPUT, JSON.stringify(getInputData()));
     }
 
     function renderSavedOutput(data) {
@@ -553,7 +553,7 @@
     }
 
     function restoreOutputData() {
-      const saved = sessionStorage.getItem(STORAGE_OUTPUT);
+      const saved = localStorage.getItem(STORAGE_OUTPUT);
       if (!saved) return;
 
       try {
@@ -565,8 +565,8 @@
     }
 
     function clearSavedData() {
-      sessionStorage.removeItem(STORAGE_INPUT);
-      sessionStorage.removeItem(STORAGE_OUTPUT);
+      localStorage.removeItem(STORAGE_INPUT);
+      localStorage.removeItem(STORAGE_OUTPUT);
     }
 
     function novoAcesso() {
