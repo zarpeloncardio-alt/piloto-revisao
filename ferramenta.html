@@ -652,6 +652,9 @@
 
     restoreInputData();
     restoreOutputData();
+    window.addEventListener('beforeunload', function () {
+  localStorage.removeItem(STORAGE_INPUT);
+});
   </script>
 </body>
 </html>
